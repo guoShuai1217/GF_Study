@@ -111,6 +111,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public void OnInit(int serialId, string uiFormAssetName, IUIGroup uiGroup, bool pauseCoveredUIForm, bool isNewInstance, object userData)
         {
+           
             m_SerialId = serialId;
             m_UIFormAssetName = uiFormAssetName;
             m_UIGroup = uiGroup;
@@ -301,5 +302,7 @@ namespace UnityGameFramework.Runtime
                 Log.Error("UI form '[{0}]{1}' OnDepthChanged with exception '{2}'.", m_SerialId.ToString(), m_UIFormAssetName, exception.ToString());
             }
         }
+
+
     }
 }
