@@ -155,7 +155,7 @@ namespace guoShuai
             return uiComponent.OpenUIForm(assetName, drUIForm.UIGroupName, Constant.AssetPriority.UIFormAsset, drUIForm.PauseCoveredUIForm, userData);
         }
 
-        public static void OpenDialog(this UIComponent uiComponent, DialogParams dialogParams)
+        public static void PushDialog(this UIComponent uiComponent, DialogParams dialogParams)
         {
             //if (((ProcedureBase)Game.Procedure.CurrentProcedure).UseNativeDialog)
             //{

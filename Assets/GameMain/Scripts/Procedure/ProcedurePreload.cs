@@ -53,14 +53,14 @@ namespace guoShuai
             base.OnEnter(procedureOwner);         
             Log.Debug("进入 " + GetType() + " 流程");
 
-
+           // LoadingForm.Instance.OnShow();
+           
             Game.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, LoadDataTableSuccess);
             Game.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, LoadDataTabelFailure);
            
             m_LoadedDic.Clear();
             PreLoadResource();
-
-            // Game.UI.OpenUIForm(FormEnum.Loading, this);
+         
         }
 
         protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
@@ -73,6 +73,7 @@ namespace guoShuai
 
             Log.Debug("所有资源都加载完成");
 
+            // LoadingForm.Instance.OnHide();
             ChangeState<ProcedureMenu>(procedureOwner);
 
         }
@@ -129,7 +130,6 @@ namespace guoShuai
 
             m_LoadedDic[Utility.Text.Format("DataTable.{0}", ne.DataTableName)] = true;
             Log.Info("Load data table '{0}' OK.", ne.DataTableName);
-
         }
 
 

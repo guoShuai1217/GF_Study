@@ -1,5 +1,5 @@
 ﻿/*
- *		Description: 
+ *		Description: 尝试用 MVC 去写这个界面的逻辑
  *
  *		CreatedBy: guoShuai
  *
@@ -16,6 +16,7 @@ using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 namespace guoShuai
 {
+    // View
     public class LoginForm : UGuiForm
     {
 
@@ -113,8 +114,11 @@ namespace guoShuai
             WebRequestSuccessEventArgs ne = (WebRequestSuccessEventArgs)e;
             if (ne.UserData != this) return;
 
-            Log.Info("登陆成功");
+            // TODO解析服务端返回的数据
+            // Utility.Json.ToObject<>()
 
+            Log.Info("登陆成功");
+            Game.UI.OpenUIForm(FormEnum.MenuForm);
         }
         // 登陆失败回调
         private void WebRequestFailure(object sender, GameEventArgs e)
@@ -130,7 +134,7 @@ namespace guoShuai
         {
             if (string.IsNullOrEmpty(model.Account))
             {
-                Game.UI.OpenDialog(new DialogParams()
+                Game.UI.PushDialog(new DialogParams()
                 {
                     Mode = 2,
                     Title = "提示",
@@ -145,7 +149,7 @@ namespace guoShuai
 
             if (string.IsNullOrEmpty(model.Password))
             {
-                Game.UI.OpenDialog(new DialogParams()
+                Game.UI.PushDialog(new DialogParams()
                 {
                     Mode = 2,
                     Title = "提示",
@@ -163,8 +167,6 @@ namespace guoShuai
         }
 
     }
-
-
 
     // Model
     public class LoginModel

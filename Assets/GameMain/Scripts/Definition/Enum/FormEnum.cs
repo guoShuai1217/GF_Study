@@ -22,42 +22,57 @@ namespace guoShuai
         /// <summary>
         /// 弹框
         /// </summary>
-        DialogForm,
+        DialogForm = 1,
+
+        /// <summary>
+        /// 加载界面
+        /// </summary>
+        LoadingForm = 2,
 
         /// <summary>
         /// 登陆界面
         /// </summary>
-        LoginForm,
+        LoginForm = 10,
+
+        /// <summary>
+        /// 注册
+        /// </summary>
+        RegistForm = 11 ,
+
+        /// <summary>
+        /// 忘记密码
+        /// </summary>
+        FindPsdForm = 12 ,
 
         /// <summary>
         /// 菜单
         /// </summary>
-        MenuForm,
+        MenuForm = 20,
 
         /// <summary>
         /// 新建案件
         /// </summary>
-        NewCaseForm,
+        NewCaseForm =21,
 
         /// <summary>
         /// 打开已有案件
         /// </summary>
-        ExistCaseForm,
+        ExistCaseForm = 22,
 
         /// <summary>
         /// 绘制界面
         /// </summary>
-        DrawForm,
+        DrawForm = 50,
 
         /// <summary>
         /// 主界面
         /// </summary>
-        MainForm,
+        MainForm = 51,
 
         /// <summary>
         /// 勘察报告
         /// </summary>
-        ReportForm,
+        ReportForm = 100,
 
     }
 }
