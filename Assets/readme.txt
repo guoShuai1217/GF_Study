@@ -25,10 +25,53 @@ GF的语言设置  :
 
 
 
+2020.07.17 周五 : 
+一个页面请求多个网址的逻辑  : 
+
+有时候一个页面里，我们会请求多个网址，在请求的回调里如何判断是哪个请求的回调呢 ? 
+框架里给了 SerialId 参数 ， 用来区分是哪一个请求发送的数据
+
+		protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
+        {
+            base.OnEnter(procedureOwner);
+            Log.Debug("进入 " + GetType() + " 流程");
+
+            Game.Event.Subscribe(WebRequestSuccessEventArgs.EventId, WebRequestSuccess);
+            Game.Event.Subscribe(WebRequestFailureEventArgs.EventId, WebRequestFailure);
+
+			// 发送登陆请求
+            string url = ServerUtility.GetLoginURL("13817826484", "123456");
+            Game.WebRequest.AddWebRequest(url, this);
+
+			// 发送重置密码请求
+            string url1 = ServerUtility.GetFindPsdURL("13817826484", "123456","631425");
+            Game.WebRequest.AddWebRequest(url1, this);
+        }
+
+
+		private void WebRequestSuccess(object sender, GameEventArgs e)
+        {
+            WebRequestSuccessEventArgs ne = (WebRequestSuccessEventArgs)e;
+            if (ne.UserData != this)
+                return;
+
+            switch (ne.SerialId)
+            {
+                case 1: // 登陆请求的回复
+                   
+				   
+				   
+                    break;
+
+                case 2: // 重置密码请求的回复
 
 
 
-
+                    break;
+              
+            }
+           
+        }
 
 
 

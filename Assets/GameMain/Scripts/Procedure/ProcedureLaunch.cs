@@ -6,8 +6,11 @@
  *		DataTime: 2020.07.09
  *
  */
+using GameFramework;
+using GameFramework.Event;
 using GameFramework.Fsm;
 using GameFramework.Procedure;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,13 +33,10 @@ namespace guoShuai
         {
             base.OnEnter(procedureOwner);
             Log.Debug("进入 " + GetType() + " 流程");
-
-
-            
-
-
+         
         }
 
+    
         protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);

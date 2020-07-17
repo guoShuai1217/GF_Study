@@ -45,7 +45,7 @@ namespace guoShuai
         protected override void OnClose(bool isShutdown, object userData)
         {
             logic.RemoveListenerWebRequest();
-
+           
             base.OnClose(isShutdown, userData);
         }
 
@@ -64,11 +64,16 @@ namespace guoShuai
                 case "btn_Regist":
                     OnClickRegist();
                     break;
+                case "btn_FindPsd":
+                    OnClickFindPsd();
+                    break;
                 default:
+                    Log.Error("不存在该按钮 " + str);
                     break;
             }
         }
 
+     
         private void OnClickRegist()
         {
             Game.UI.OpenUIForm(FormEnum.MenuForm, this);
@@ -79,6 +84,12 @@ namespace guoShuai
             model.SetValue(input_Account.text, input_Password.text);
             logic.Login();
         }
+
+        private void OnClickFindPsd()
+        {
+            Game.UI.OpenUIForm(FormEnum.FindPsdForm, this);
+        }
+
 
         #endregion
     }
@@ -115,10 +126,13 @@ namespace guoShuai
             if (ne.UserData != this) return;
 
             // TODO解析服务端返回的数据
-            // Utility.Json.ToObject<>()
-
-            Log.Info("登陆成功");
-            Game.UI.OpenUIForm(FormEnum.MenuForm);
+            LoginData tmp = Utility.Json.ToObject<LoginData>(ne.GetWebResponseBytes());
+            if (tmp.message == "1")
+            {
+                Log.Info("登陆成功");
+                Game.UI.OpenUIForm(FormEnum.RegistForm);
+            }
+           
         }
         // 登陆失败回调
         private void WebRequestFailure(object sender, GameEventArgs e)
@@ -161,8 +175,9 @@ namespace guoShuai
                 });
                 return;
             }
-            string url = Utility.Text.Format("https://www.baidu.com/account={0}&password={1}", model.Account, model.Password);
-            Game.WebRequest.AddWebRequest(url,this);
+
+            string url = ServerUtility.GetLoginURL(model.Account, model.Password);
+            Game.WebRequest.AddWebRequest(url, this);
 
         }
 
