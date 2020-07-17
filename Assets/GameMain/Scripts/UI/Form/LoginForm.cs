@@ -22,9 +22,7 @@ namespace guoShuai
 
         public InputField input_Account;
         public InputField input_Password;
-        public Button btn_Login;
-        public Button btn_Regist;
-
+       
         private LoginModel model;
         private LoginLogic logic;
 
@@ -45,8 +43,20 @@ namespace guoShuai
         protected override void OnClose(bool isShutdown, object userData)
         {
             logic.RemoveListenerWebRequest();
-           
+            model = null;
+            logic = null;
+
             base.OnClose(isShutdown, userData);
+        }
+
+        protected override void OnUpdate(float elapseSeconds, float realElapseSeconds)
+        {
+            base.OnUpdate(elapseSeconds, realElapseSeconds);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Game.UI.OpenUIForm(FormEnum.SettingForm);
+            }
         }
 
 
@@ -130,7 +140,7 @@ namespace guoShuai
             if (tmp.message == "1")
             {
                 Log.Info("登陆成功");
-                Game.UI.OpenUIForm(FormEnum.RegistForm);
+                Game.UI.OpenUIForm(FormEnum.MenuForm);
             }
            
         }

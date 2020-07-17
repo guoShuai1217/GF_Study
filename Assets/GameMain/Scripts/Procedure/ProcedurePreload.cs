@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using GameFramework.Event;
 using System;
 using GameFramework;
+using GameFramework.Resource;
+using UnityEngine;
 
 namespace guoShuai
 {
@@ -40,7 +42,7 @@ namespace guoShuai
 
         #region 重写父类的方法
 
-    
+
         protected override void OnInit(IFsm<IProcedureManager> procedureOwner)
         {
             base.OnInit(procedureOwner);
@@ -50,17 +52,19 @@ namespace guoShuai
 
         protected override void OnEnter(IFsm<IProcedureManager> procedureOwner)
         {
-            base.OnEnter(procedureOwner);         
+            base.OnEnter(procedureOwner);
             Log.Debug("进入 " + GetType() + " 流程");
 
-           // LoadingForm.Instance.OnShow();
-           
+            // LoadingForm.Instance.OnShow();
+
             Game.Event.Subscribe(LoadDataTableSuccessEventArgs.EventId, LoadDataTableSuccess);
             Game.Event.Subscribe(LoadDataTableFailureEventArgs.EventId, LoadDataTabelFailure);
-           
+            Game.Event.Subscribe(LoadDictionarySuccessEventArgs.EventId, OnLoadDictionarySuccess);
+            Game.Event.Subscribe(LoadDictionaryFailureEventArgs.EventId, OnLoadDictionaryFailure);
+
             m_LoadedDic.Clear();
             PreLoadResource();
-         
+
         }
 
         protected override void OnUpdate(IFsm<IProcedureManager> procedureOwner, float elapseSeconds, float realElapseSeconds)
@@ -72,14 +76,14 @@ namespace guoShuai
             }
 
             Log.Debug("所有资源都加载完成");
-
+           
             // LoadingForm.Instance.OnHide();
             ChangeState<ProcedureMenu>(procedureOwner);
 
         }
 
         protected override void OnLeave(IFsm<IProcedureManager> procedureOwner, bool isShutdown)
-        {         
+        {
             Game.Event.Unsubscribe(LoadDataTableSuccessEventArgs.EventId, LoadDataTableSuccess);
             Game.Event.Unsubscribe(LoadDataTableFailureEventArgs.EventId, LoadDataTabelFailure);
 
@@ -99,11 +103,18 @@ namespace guoShuai
         // 预加载资源
         private void PreLoadResource()
         {
-
+            // Preload datatable
             foreach (string item in DataTableName)
             {
                 LoadDataTable(item);
             }
+
+            // Preload dictionaries
+            LoadDictionary("Default");
+
+
+            // Preload fonts
+            LoadFont("MainFont");
 
         }
 
@@ -115,7 +126,36 @@ namespace guoShuai
             m_LoadedDic.Add(dataTableName, false);
 
             // 开始加载配置文件
-            Game.DataTable.LoadDataTable(item, false,this);
+            Game.DataTable.LoadDataTable(item, false, this);
+        }
+
+        // 加载字典
+        private void LoadDictionary(string dictionaryName)
+        {
+            m_LoadedDic.Add(Utility.Text.Format("Dictionary.{0}", dictionaryName), false);
+            Game.Localization.LoadDictionary(dictionaryName, false, this);
+        }
+
+
+        private void LoadFont(string fontName)
+        {
+            m_LoadedDic.Add(Utility.Text.Format("Font.{0}", fontName), false);
+
+            Game.Resource.LoadAsset(AssetUtility.GetFontAsset(fontName), Constant.AssetPriority.FontAsset, new LoadAssetCallbacks(
+                
+                // 加载成功的回调
+                (assetName, asset, duration, userData) =>
+                {
+                    m_LoadedDic[Utility.Text.Format("Font.{0}", fontName)] = true;
+                    UGuiForm.SetMainFont((Font)asset);
+                    Log.Info("Load font '{0}' OK.", fontName);
+                },
+
+                // 加载失败的回调
+                (assetName, status, errorMessage, userData) =>
+                {
+                    Log.Error("Can not load font '{0}' from '{1}' with error message '{2}'.", fontName, assetName, errorMessage);
+                }));
         }
 
 
@@ -143,6 +183,30 @@ namespace guoShuai
             Log.Error("Can not load data table '{0}' from '{1}' with error message '{2}'.", ne.DataTableName, ne.DataTableAssetName, ne.ErrorMessage);
         }
 
+
+        private void OnLoadDictionarySuccess(object sender, GameEventArgs e)
+        {
+            LoadDictionarySuccessEventArgs ne = (LoadDictionarySuccessEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            m_LoadedDic[Utility.Text.Format("Dictionary.{0}", ne.DictionaryName)] = true;
+            Log.Info("Load dictionary '{0}' OK.", ne.DictionaryName);
+        }
+
+
+        private void OnLoadDictionaryFailure(object sender, GameEventArgs e)
+        {
+            LoadDictionaryFailureEventArgs ne = (LoadDictionaryFailureEventArgs)e;
+            if (ne.UserData != this)
+            {
+                return;
+            }
+
+            Log.Error("Can not load dictionary '{0}' from '{1}' with error message '{2}'.", ne.DictionaryName, ne.DictionaryAssetName, ne.ErrorMessage);
+        }
 
         #endregion
 

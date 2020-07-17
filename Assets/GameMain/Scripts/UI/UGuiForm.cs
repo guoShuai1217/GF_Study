@@ -100,15 +100,15 @@ namespace guoShuai
             gameObject.GetOrAddComponent<GraphicRaycaster>();
 
             // 可以在做UI的时候,把需要赋值的text里写上配置文件里的key,然后运行的时候就可以自动转换为value了
-            //Text[] texts = GetComponentsInChildren<Text>(true);
-            //for (int i = 0; i < texts.Length; i++)
-            //{
-            //    texts[i].font = s_MainFont;
-            //    if (!string.IsNullOrEmpty(texts[i].text))
-            //    {
-            //        texts[i].text = Game.Localization.GetString(texts[i].text);
-            //    }
-            //}
+            Text[] texts = GetComponentsInChildren<Text>(true);
+            for (int i = 0; i < texts.Length; i++)
+            {
+                texts[i].font = s_MainFont;
+                if (!string.IsNullOrEmpty(texts[i].text))
+                {
+                    texts[i].text = Game.Localization.GetString(texts[i].text);
+                }
+            }
         }
 
 #if UNITY_2017_3_OR_NEWER

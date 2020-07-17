@@ -30,6 +30,11 @@ namespace guoShuai
         LoadingForm = 2,
 
         /// <summary>
+        /// 设置界面
+        /// </summary>
+        SettingForm = 3,
+
+        /// <summary>
         /// 登陆界面
         /// </summary>
         LoginForm = 10,
